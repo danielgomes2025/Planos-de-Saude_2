@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Encontre o Plano de Saúde Ideal para Você!</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #e5e7eb; /* Gray-200 background */
+            color: #1f2937; /* Gray-800 text */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 1rem;
+        }
+        .funnel-container {
+            background-color: #ffffff;
+            border-radius: 1.5rem; /* rounded-3xl */
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            max-width: 900px;
+            width: 100%;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        .progress-bar-container {
+            background-color: #d1d5db; /* Gray-300 */
+            border-radius: 0.5rem;
+            height: 0.75rem; /* h-3 */
+            overflow: hidden;
+            margin: 1.5rem 2rem; /* my-6 mx-8 */
+        }
+        .progress-bar-fill {
+            background-color: #facc15; /* Yellow-400 */
+            height: 100%;
+            width: 0%;
+            border-radius: 0.5rem;
+            transition: width 0.5s ease-in-out;
+        }
+        .step-content {
+            padding: 2rem;
+            text-align: center;
+            min-height: 300px; /* Ensure content area is consistent */
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .step-content h2 {
+            font-size: 2.25rem; /* text-4xl */
+            font-weight: 700; /* font-bold */
+            margin-bottom: 1rem;
+            color: #111827; /* Black */
+        }
+        .step-content p {
+            font-size: 1.125rem; /* text-lg */
+            color: #374151; /* Gray-700 */
+            margin-bottom: 2rem;
+        }
+        .input-group {
+            margin-bottom: 1.5rem;
+            width: 100%;
+            max-width: 400px;
+            text-align: left;
+        }
+        .input-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #111827; /* Gray-900 */
+        }
+        .input-group input[type="text"],
+        .input-group input[type="email"],
+        .input-group input[type="tel"],
+        .input-group input[type="number"],
+        .input-group select,
+        .input-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #cbd5e1; /* Gray-300 */
+            border-radius: 0.5rem; /* rounded-lg */
+            font-size: 1rem;
+            color: #111827; /* Gray-900 */
+            background-color: #f8fafc; /* Lightest gray */
+            transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .input-group input[type="text"]:focus,
+        .input-group input[type="email"]:focus,
+        .input-group input[type="tel"]:focus,
+        .input-group input[type="number"]:focus,
+        .input-group select:focus,
+        .input-group textarea:focus {
+            outline: none;
+            border-color: #facc15; /* Yellow-400 */
+            box-shadow: 0 0 0 3px rgba(250, 204, 21, 0.4);
+        }
+        .checkbox-group, .radio-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            max-width: 600px;
+            width: 100%;
+        }
+        .checkbox-item, .radio-item {
+            background-color: #f3f4f6; /* Gray-100 */
+            border: 1px solid #d1d5db; /* Gray-300 */
+            border-radius: 0.75rem; /* rounded-xl */
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-weight: 500;
+            color: #111827; /* Gray-900 */
+        }
+        .checkbox-item:hover, .radio-item:hover {
+            background-color: #e5e7eb; /* Gray-200 */
+            border-color: #facc15; /* Yellow-400 */
+        }
+        .checkbox-item input[type="checkbox"],
+        .radio-item input[type="radio"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 1.25rem;
+            height: 1.25rem;
+            border: 2px solid #9ca3af; /* Gray-400 */
+            border-radius: 0.25rem; /* rounded-md */
+            cursor: pointer;
+            position: relative;
+            flex-shrink: 0;
+        }
+        .radio-item input[type="radio"] {
+            border-radius: 50%;
+        }
+        .checkbox-item input[type="checkbox"]:checked,
+        .radio-item input[type="radio"]:checked {
+            background-color: #facc15; /* Yellow-400 */
+            border-color: #facc15;
+        }
+        .checkbox-item input[type="checkbox"]:checked::before {
+            content: '\2713';
+            display: block;
+            color: #111827; /* Black for checkmark */
+            font-size: 0.8rem;
+            font-weight: bold;
+            text-align: center;
+            line-height: 1rem;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .radio-item input[type="radio"]:checked::before {
+            content: '';
+            display: block;
+            width: 0.6rem;
+            height: 0.6rem;
+            background-color: #111827; /* Black for radio dot */
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .checkbox-item.selected, .radio-item.selected {
+            background-color: #fef9c3; /* Yellow-100 */
+            border-color: #facc15; /* Yellow-400 */
+            box-shadow: 0 0 0 2px rgba(250, 204, 21, 0.4);
+        }
+
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            padding: 1.5rem 2rem;
+            border-top: 1px solid #e5e7eb;
+        }
+        .navigation-buttons button {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.75rem; /* rounded-xl */
+            font-weight: 600;
+            transition: all 0.2s ease-in-out;
+            border: none;
+        }
+        .navigation-buttons button.prev {
+            background-color: #d1d5db; /* Gray-300 */
+            color: #4b5563; /* Gray-600 */
+        }
+        .navigation-buttons button.prev:hover {
+            background-color: #9ca3af; /* Gray-400 */
+        }
+        .navigation-buttons button.next {
+            background-color: #edbe02; /* Custom Yellow */
+            color: #111827; /* Black */
+            box-shadow: 0 4px 10px rgba(237, 190, 2, 0.3);
+        }
+        .navigation-buttons button.next:hover {
+            background-color: #d9ac00; /* Darker Yellow */
+            box-shadow: 0 6px 15px rgba(237, 190, 2, 0.5);
+        }
+        .navigation-buttons button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .final-cta-button {
+            background-color: #edbe02; /* Custom Yellow */
+            color: #111827; /* Black */
+            padding: 1rem 2rem;
+            border-radius: 0.75rem;
+            font-weight: 700;
+            font-size: 1.25rem;
+            box-shadow: 0 6px 15px rgba(237, 190, 2, 0.4);
+            transition: all 0.2s ease-in-out;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            z-index: 10;
+            position: relative;
+            border: none;
+        }
+        .final-cta-button:hover {
+            transform: translateY(-3px);
+            background-color: #d9ac00; /* Darker Yellow */
+            box-shadow: 0 8px 20px rgba(237, 190, 2, 0.6);
+        }
+        .summary-section {
+            text-align: left;
+            width: 100%;
+            max-width: 600px;
+            margin-top: 1.5rem;
+            background-color: #f3f4f6; /* Gray-100 */
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.05);
+            color: #374151; /* Gray-700 */
+        }
+        .summary-section h3 {
+            font-size: 1.5rem; /* text-2xl */
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #111827; /* Black */
+        }
+        .summary-section p {
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+            color: #374151; /* Gray-700 */
+        }
+        .summary-section strong {
+            color: #000000; /* Black */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="funnel-container">
+        <div class="p-6 pb-0 text-center">
+            <!-- Icon representing a protected family -->
+            <i class="fas fa-hands-holding-child text-6xl mb-4" style="color: #edbe02;"></i>
+            <h1 class="text-3xl font-extrabold text-black">Plano de Saúde Ideal</h1>
+        </div>
+
+        <div class="progress-bar-container">
+            <div class="progress-bar-fill" id="progressBar"></div>
+        </div>
+
+        <div id="funnelSteps">
+            <!-- Step 1: Welcome -->
+            <div class="step-content" data-step="1">
+                <i class="fas fa-hand-holding-heart text-6xl mb-6" style="color: #edbe02;"></i>
+                <h2>Encontre o Plano de Saúde Ideal para Você!</h2>
+                <p>Responda algumas perguntas rápidas e descubra as melhores opções de plano de saúde personalizadas para suas necessidades e de sua família.</p>
+            </div>
+
+            <!-- Step 2: Contact Info -->
+            <div class="step-content hidden" data-step="2">
+                <i class="fas fa-user-circle text-6xl text-gray-500 mb-6"></i>
+                <h2>Para começarmos, quais são seus dados?</h2>
+                <div class="w-full max-w-md">
+                    <div class="input-group">
+                        <label for="nome">Nome Completo:</label>
+                        <input type="text" id="nome" name="nome" placeholder="Seu nome" class="rounded-lg">
+                    </div>
+                    <div class="input-group">
+                        <label for="email">E-mail:</label>
+                        <input type="email" id="email" name="email" placeholder="seu.email@exemplo.com" class="rounded-lg">
+                    </div>
+                    <div class="input-group">
+                        <label for="telefone">Telefone (WhatsApp preferencial):</label>
+                        <input type="tel" id="telefone" name="telefone" placeholder="(XX) XXXXX-XXXX" class="rounded-lg">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 3: Plan Type -->
+            <div class="step-content hidden" data-step="3">
+                <i class="fas fa-briefcase text-6xl text-gray-500 mb-6"></i>
+                <h2>Você busca um plano para pessoa física ou empresarial?</h2>
+                <div class="radio-group">
+                    <label class="radio-item">
+                        <input type="radio" name="tipoPlano" value="fisica">
+                        Pessoa Física
+                    </label>
+                    <label class="radio-item">
+                        <input type="radio" name="tipoPlano" value="empresarial">
+                        Empresarial
+                    </label>
+                </div>
+                <div class="input-group w-full max-w-md hidden" id="documentoGroup">
+                    <label for="documento" id="documentoLabel"></label>
+                    <input type="text" id="documento" name="documento" class="rounded-lg">
+                </div>
+            </div>
+
+            <!-- Step 4: Demographics -->
+            <div class="step-content hidden" data-step="4">
+                <i class="fas fa-users text-6xl text-gray-500 mb-6"></i>
+                <h2>Quantas pessoas você quer incluir no plano?</h2>
+                <div class="w-full max-w-md">
+                    <div class="input-group">
+                        <label for="adultos">Número de adultos:</label>
+                        <input type="number" id="adultos" name="adultos" min="1" value="1" class="rounded-lg">
+                    </div>
+                    <div class="input-group">
+                        <label for="criancas">Número de crianças (0-18 anos):</label>
+                        <input type="number" id="criancas" name="criancas" min="0" value="0" class="rounded-lg">
+                    </div>
+                    <div class="input-group">
+                        <label for="idadesAdultos">Idades de todos os adultos (separadas por vírgula):</label>
+                        <textarea id="idadesAdultos" name="idadesAdultos" rows="3" placeholder="Ex: 30, 45, 52" class="rounded-lg"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 5: Location -->
+            <div class="step-content hidden" data-step="5">
+                <i class="fas fa-map-marker-alt text-6xl text-gray-500 mb-6"></i>
+                <h2>Qual a sua região de atendimento preferencial?</h2>
+                <div class="w-full max-w-md">
+                    <div class="input-group">
+                        <label for="estado">Estado:</label>
+                        <select id="estado" name="estado" class="rounded-lg">
+                            <option value="">Selecione</option>
+                            <option value="AC">Acre</option>
+                            <option value="AL">Alagoas</option>
+                            <option value="AP">Amapá</option>
+                            <option value="AM">Amazonas</option>
+                            <option value="BA">Bahia</option>
+                            <option value="CE">Ceará</option>
+                            <option value="DF">Distrito Federal</option>
+                            <option value="ES">Espírito Santo</option>
+                            <option value="GO">Goiás</option>
+                            <option value="MA">Maranhão</option>
+                            <option value="MT">Mato Grosso</option>
+                            <option value="MS">Mato Grosso do Sul</option>
+                            <option value="MG">Minas Gerais</option>
+                            <option value="PA">Pará</option>
+                            <option value="PB">Paraíba</option>
+                            <option value="PR">Paraná</option>
+                            <option value="PE">Pernambuco</option>
+                            <option value="PI">Piauí</option>
+                            <option value="RJ">Rio de Janeiro</option>
+                            <option value="RN">Rio Grande do Norte</option>
+                            <option value="RS">Rio Grande do Sul</option>
+                            <option value="RO">Rondônia</option>
+                            <option value="RR">Roraima</option>
+                            <option value="SC">Santa Catarina</option>
+                            <option value="SP">São Paulo</option>
+                            <option value="SE">Sergipe</option>
+                            <option value="TO">Tocantins</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label for="cidade">Cidade:</label>
+                        <input type="text" id="cidade" name="cidade" placeholder="Sua cidade" class="rounded-lg">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 6: Priorities -->
+            <div class="step-content hidden" data-step="6">
+                <i class="fas fa-clipboard-list text-6xl text-gray-500 mb-6"></i>
+                <h2>O que é mais importante para você em um plano?</h2>
+                <div class="checkbox-group">
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="prioridades" value="hospitalar">
+                        Cobertura Hospitalar
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="prioridades" value="valores">
+                        Valores (Custo)
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="prioridades" value="odontologia">
+                        Odontologia
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="prioridades" value="enfermaria">
+                        Acomodação: Enfermaria
+                    </label>
+                    <label class="checkbox-item">
+                        <input type="checkbox" name="prioridades" value="apartamento">
+                        Acomodação: Apartamento
+                    </label>
+                </div>
+                <div class="input-group w-full max-w-md">
+                    <label for="redeCredenciada">Rede Credenciada Específica (opcional):</label>
+                    <input type="text" id="redeCredenciada" name="redeCredenciada" placeholder="Ex: Hospital Albert Einstein, Rede D'Or" class="rounded-lg">
+                </div>
+            </div>
+
+            <!-- Step 7: Current Plan -->
+            <div class="step-content hidden" data-step="7">
+                <i class="fas fa-info-circle text-6xl text-gray-500 mb-6"></i>
+                <h2>Você já possui plano de saúde?</h2>
+                <div class="radio-group">
+                    <label class="radio-item">
+                        <input type="radio" name="planoAtual" value="sim_individual">
+                        Sim, individual/familiar
+                    </label>
+                    <label class="radio-item">
+                        <input type="radio" name="planoAtual" value="sim_empresarial">
+                        Sim, empresarial
+                    </label>
+                    <label class="radio-item">
+                        <input type="radio" name="planoAtual" value="nao">
+                        Não
+                    </label>
+                </div>
+                <div class="input-group w-full max-w-md hidden" id="operadoraAtualGroup">
+                    <label for="operadoraAtual">Qual o nome da operadora atual?</label>
+                    <input type="text" id="operadoraAtual" name="operadoraAtual" placeholder="Ex: Bradesco Saúde, SulAmérica" class="rounded-lg">
+                </div>
+            </div>
+
+            <!-- Step 8: Summary -->
+            <div class="step-content hidden" data-step="8">
+                <i class="fas fa-check-circle text-6xl text-green-500 mb-6"></i>
+                <h2>Seu Perfil de Plano Ideal</h2>
+                <p>Com base nas suas respostas, nossos especialistas podem encontrar as melhores opções para você. Fale conosco agora e receba uma consultoria gratuita!</p>
+                <div class="summary-section">
+                    <h3>Resumo das Suas Respostas:</h3>
+                    <p><strong>Nome:</strong> <span id="summaryNome"></span></p>
+                    <p><strong>E-mail:</strong> <span id="summaryEmail"></span></p>
+                    <p><strong>Telefone:</strong> <span id="summaryTelefone"></span></p>
+                    <p><strong>Tipo de Plano:</strong> <span id="summaryTipoPlano"></span></p>
+                    <p><strong>Documento:</strong> <span id="summaryDocumento"></span></p>
+                    <p><strong>Adultos:</strong> <span id="summaryAdultos"></span></p>
+                    <p><strong>Crianças:</strong> <span id="summaryCriancas"></span></p>
+                    <p><strong>Idades Adultos:</strong> <span id="summaryIdadesAdultos"></span></p>
+                    <p><strong>Localização:</strong> <span id="summaryLocalizacao"></span></p>
+                    <p><strong>Prioridades:</strong> <span id="summaryPrioridades"></span></p>
+                    <p><strong>Rede Específica:</strong> <span id="summaryRedeEspec"></span></p>
+                    <p><strong>Plano Atual:</strong> <span id="summaryPlanoAtual"></span></p>
+                    <p><strong>Operadora Atual:</strong> <span id="summaryOperadoraAtual"></span></p>
+                </div>
+                <a href="#" id="whatsappCta" target="_blank" class="final-cta-button mt-8">
+                    <i class="fab fa-whatsapp text-3xl"></i> Receber Consultoria Gratuita
+                </a>
+            </div>
+        </div>
+
+        <div class="navigation-buttons">
+            <button class="prev-step prev hidden"><i class="fas fa-arrow-left mr-2"></i> Anterior</button>
+            <button class="next-step next">Próximo <i class="fas fa-arrow-right ml-2"></i></button>
+        </div>
+    </div>
+
+    <script>
+        const funnelSteps = document.querySelectorAll('.step-content');
+        const progressBar = document.getElementById('progressBar');
+        const prevButton = document.querySelector('.prev-step.prev');
+        const nextButton = document.querySelector('.next-step.next');
+        const whatsappCta = document.getElementById('whatsappCta');
+        const operadoraAtualGroup = document.getElementById('operadoraAtualGroup');
+        const planoAtualRadios = document.querySelectorAll('input[name="planoAtual"]');
+        const tipoPlanoRadios = document.querySelectorAll('input[name="tipoPlano"]');
+        const documentoGroup = document.getElementById('documentoGroup');
+        const documentoLabel = document.getElementById('documentoLabel');
+        const documentoInput = document.getElementById('documento');
+        const idadesAdultosTextarea = document.getElementById('idadesAdultos');
+
+
+        let currentStep = 0;
+        const totalSteps = funnelSteps.length;
+        const formData = {};
+
+        function updateProgressBar() {
+            const progress = (currentStep / (totalSteps - 1)) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+
+        function showStep(stepIndex) {
+            funnelSteps.forEach((step, index) => {
+                step.classList.add('hidden');
+                if (index === stepIndex) {
+                    step.classList.remove('hidden');
+                }
+            });
+
+            prevButton.classList.toggle('hidden', stepIndex === 0);
+
+            if (stepIndex === totalSteps - 1) { // Summary step
+                nextButton.style.display = 'none';
+                whatsappCta.style.display = 'inline-flex';
+            } else {
+                nextButton.style.display = 'inline-flex';
+                whatsappCta.style.display = 'none';
+
+                if (stepIndex === 0) {
+                    nextButton.innerHTML = 'Começar <i class="fas fa-arrow-right ml-2"></i>';
+                } else if (stepIndex === totalSteps - 2) {
+                    nextButton.innerHTML = 'Ver Resumo';
+                } else {
+                    nextButton.innerHTML = 'Próximo <i class="fas fa-arrow-right ml-2"></i>';
+                }
+            }
+
+            updateProgressBar();
+        }
+
+        function validateStep(stepIndex) {
+            let isValid = true;
+            const currentStepElement = funnelSteps[stepIndex];
+
+            if (stepIndex === 1) { // Step 2: Contact Info
+                const nome = currentStepElement.querySelector('#nome').value.trim();
+                const email = currentStepElement.querySelector('#email').value.trim();
+                const telefone = currentStepElement.querySelector('#telefone').value.trim();
+                if (!nome || !email || !telefone) {
+                    isValid = false;
+                    alert('Por favor, preencha todos os campos de contato.');
+                } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                    isValid = false;
+                    alert('Por favor, insira um e-mail válido.');
+                }
+            } else if (stepIndex === 2) { // Step 3: Tipo de Plano
+                const selectedOption = currentStepElement.querySelector('input[name="tipoPlano"]:checked');
+                if (!selectedOption) {
+                    isValid = false;
+                    alert('Por favor, selecione se o plano é para pessoa física ou empresarial.');
+                } else if (!documentoGroup.classList.contains('hidden') && !documentoInput.value.trim()) {
+                    isValid = false;
+                    alert(`Por favor, preencha o campo de ${documentoLabel.textContent.toLowerCase().replace(':','')}.`);
+                }
+            } else if (stepIndex === 3) { // Step 4: Demographics
+                const adultos = currentStepElement.querySelector('#adultos').value;
+                const idadesAdultos = idadesAdultosTextarea.value.trim();
+
+                if (adultos < 1) {
+                    isValid = false;
+                    alert('Por favor, insira um número válido de adultos (mín. 1).');
+                } else if (!idadesAdultos) {
+                    isValid = false;
+                    alert('Por favor, insira as idades de todos os adultos.');
+                } else {
+                    const agesArray = idadesAdultos.split(',').map(age => parseInt(age.trim()));
+                    if (agesArray.some(isNaN) || agesArray.some(age => age < 0)) {
+                        isValid = false;
+                        alert('Por favor, insira idades válidas para os adultos (números separados por vírgula).');
+                    } else if (agesArray.length !== parseInt(adultos)) {
+                        isValid = false;
+                        alert(`O número de idades inseridas (${agesArray.length}) não corresponde ao número de adultos (${adultos}).`);
+                    }
+                }
+            } else if (stepIndex === 4) { // Step 5: Location
+                const estado = currentStepElement.querySelector('#estado').value;
+                const cidade = currentStepElement.querySelector('#cidade').value.trim();
+                if (!estado || !cidade) {
+                    isValid = false;
+                    alert('Por favor, selecione seu estado e digite sua cidade.');
+                }
+            } else if (stepIndex === 5) { // Step 6: Plan Priorities
+                const selectedPriorities = currentStepElement.querySelectorAll('input[name="prioridades"]:checked');
+                if (selectedPriorities.length === 0) {
+                    isValid = false;
+                    alert('Por favor, selecione pelo menos uma prioridade para o plano.');
+                }
+            } else if (stepIndex === 6) { // Step 7: Current Situation
+                const selectedOption = currentStepElement.querySelector('input[name="planoAtual"]:checked');
+                if (!selectedOption) {
+                    isValid = false;
+                    alert('Por favor, selecione sua situação atual com plano de saúde.');
+                } else if (selectedOption.value.startsWith('sim') && !currentStepElement.querySelector('#operadoraAtual').value.trim()) {
+                    isValid = false;
+                    alert('Por favor, digite o nome da sua operadora atual.');
+                }
+            }
+            return isValid;
+        }
+
+        function collectData(stepIndex) {
+            const currentStepElement = funnelSteps[stepIndex];
+            if (stepIndex === 1) {
+                formData.nome = currentStepElement.querySelector('#nome').value.trim();
+                formData.email = currentStepElement.querySelector('#email').value.trim();
+                formData.telefone = currentStepElement.querySelector('#telefone').value.trim();
+            } else if (stepIndex === 2) {
+                const selectedOption = currentStepElement.querySelector('input[name="tipoPlano"]:checked');
+                formData.tipoPlano = selectedOption ? (selectedOption.value === 'fisica' ? 'Pessoa Física' : 'Empresarial') : 'Não informado';
+                formData.documento = documentoInput.value.trim();
+            } else if (stepIndex === 3) {
+                formData.adultos = currentStepElement.querySelector('#adultos').value;
+                formData.criancas = currentStepElement.querySelector('#criancas').value;
+                formData.idadesAdultos = idadesAdultosTextarea.value.trim();
+            } else if (stepIndex === 4) {
+                formData.estado = currentStepElement.querySelector('#estado').value;
+                formData.cidade = currentStepElement.querySelector('#cidade').value.trim();
+            } else if (stepIndex === 5) {
+                formData.prioridades = Array.from(currentStepElement.querySelectorAll('input[name="prioridades"]:checked'))
+                                            .map(cb => {
+                                                switch(cb.value) {
+                                                    case 'hospitalar': return 'Cobertura Hospitalar';
+                                                    case 'valores': return 'Valores (Custo)';
+                                                    case 'odontologia': return 'Odontologia';
+                                                    case 'enfermaria': return 'Acomodação: Enfermaria';
+                                                    case 'apartamento': return 'Acomodação: Apartamento';
+                                                    default: return cb.value;
+                                                }
+                                            })
+                                            .join(', ') || 'Nenhuma selecionada';
+                formData.redeCredenciada = currentStepElement.querySelector('#redeCredenciada').value.trim();
+            } else if (stepIndex === 6) {
+                const selectedOption = currentStepElement.querySelector('input[name="planoAtual"]:checked');
+                formData.planoAtual = selectedOption ? selectedOption.value : 'Não informado';
+                if (formData.planoAtual === 'sim_individual') formData.planoAtual = 'Sim, individual/familiar';
+                if (formData.planoAtual === 'sim_empresarial') formData.planoAtual = 'Sim, empresarial';
+                if (formData.planoAtual === 'nao') formData.planoAtual = 'Não';
+                
+                formData.operadoraAtual = currentStepElement.querySelector('#operadoraAtual').value.trim();
+            }
+        }
+
+        function populateSummary() {
+            document.getElementById('summaryNome').textContent = formData.nome || 'Não informado';
+            document.getElementById('summaryEmail').textContent = formData.email || 'Não informado';
+            document.getElementById('summaryTelefone').textContent = formData.telefone || 'Não informado';
+            document.getElementById('summaryTipoPlano').textContent = formData.tipoPlano || 'Não informado';
+            document.getElementById('summaryDocumento').textContent = formData.documento || 'Não informado';
+            document.getElementById('summaryAdultos').textContent = formData.adultos || 'Não informado';
+            document.getElementById('summaryCriancas').textContent = formData.criancas || 'Não informado';
+            document.getElementById('summaryIdadesAdultos').textContent = formData.idadesAdultos || 'Não informado';
+            document.getElementById('summaryLocalizacao').textContent = `${formData.cidade || 'Não informado'}, ${formData.estado || ''}`.trim();
+            document.getElementById('summaryPrioridades').textContent = formData.prioridades || 'Não informado';
+            document.getElementById('summaryRedeEspec').textContent = formData.redeCredenciada || 'Nenhuma';
+            document.getElementById('summaryPlanoAtual').textContent = formData.planoAtual || 'Não informado';
+            document.getElementById('summaryOperadoraAtual').textContent = formData.operadoraAtual || 'Não informada';
+
+            const whatsappMessage = `Olá! Tenho interesse em um plano de saúde e gostaria de mais informações.
+            
+*Dados de Contato:*
+Nome: ${formData.nome || 'Não informado'}
+E-mail: ${formData.email || 'Não informado'}
+Telefone: ${formData.telefone || 'Não informado'}
+
+*Tipo de Plano Desejado:*
+${formData.tipoPlano || 'Não informado'}
+${formData.tipoPlano === 'Pessoa Física' ? 'CPF' : 'CNPJ'}: ${formData.documento || 'Não informado'}
+
+*Perfil Familiar:*
+Adultos: ${formData.adultos || 'Não informado'}
+Crianças: ${formData.criancas || 'Não informado'}
+Idades Adultos: ${formData.idadesAdultos || 'Não informado'}
+
+*Localização:*
+Cidade: ${formData.cidade || 'Não informado'}
+Estado: ${formData.estado || 'Não informado'}
+
+*Prioridades do Plano:*
+Prioridades: ${formData.prioridades || 'Não informado'}
+Rede Específica: ${formData.redeCredenciada || 'Nenhuma'}
+
+*Situação Atual:*
+Possui Plano: ${formData.planoAtual || 'Não informado'}
+Operadora Atual: ${formData.operadoraAtual || 'Não informada'}
+
+Aguardando seu contato!`;
+
+            const encodedMessage = encodeURIComponent(whatsappMessage);
+            whatsappCta.href = `https://wa.me/+5511981101586?text=${encodedMessage}`;
+        }
+
+        nextButton.addEventListener('click', () => {
+            if (currentStep < totalSteps - 1) {
+                if (currentStep === 0 || validateStep(currentStep)) {
+                    collectData(currentStep);
+                    currentStep++;
+                    showStep(currentStep);
+                    if (currentStep === totalSteps - 1) {
+                        populateSummary();
+                    }
+                }
+            }
+        });
+
+        prevButton.addEventListener('click', () => {
+            if (currentStep > 0) {
+                currentStep--;
+                showStep(currentStep);
+            }
+        });
+
+        planoAtualRadios.forEach(radio => {
+            radio.addEventListener('change', (event) => {
+                if (event.target.value.startsWith('sim')) {
+                    operadoraAtualGroup.classList.remove('hidden');
+                } else {
+                    operadoraAtualGroup.classList.add('hidden');
+                    document.getElementById('operadoraAtual').value = '';
+                }
+            });
+        });
+
+        tipoPlanoRadios.forEach(radio => {
+            radio.addEventListener('change', (event) => {
+                if (event.target.value === 'fisica') {
+                    documentoGroup.classList.remove('hidden');
+                    documentoLabel.textContent = 'CPF:';
+                    documentoInput.placeholder = 'Digite seu CPF';
+                    documentoInput.type = 'text';
+                } else if (event.target.value === 'empresarial') {
+                    documentoGroup.classList.remove('hidden');
+                    documentoLabel.textContent = 'CNPJ:';
+                    documentoInput.placeholder = 'Digite o CNPJ da empresa';
+                    documentoInput.type = 'text';
+                } else {
+                    documentoGroup.classList.add('hidden');
+                    documentoInput.value = '';
+                }
+            });
+        });
+
+        document.querySelectorAll('.checkbox-item input[type="checkbox"]').forEach(checkbox => {
+            checkbox.addEventListener('change', (event) => {
+                event.target.closest('.checkbox-item').classList.toggle('selected', event.target.checked);
+            });
+        });
+
+        document.querySelectorAll('.radio-item input[type="radio"]').forEach(radio => {
+            radio.addEventListener('change', (event) => {
+                document.querySelectorAll(`input[name="${event.target.name}"]`).forEach(otherRadio => {
+                    otherRadio.closest('.radio-item').classList.remove('selected');
+                });
+                event.target.closest('.radio-item').classList.add('selected');
+            });
+        });
+
+        showStep(currentStep);
+    </script>
+
+</body>
+</html>
